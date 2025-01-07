@@ -1,0 +1,11 @@
+.madeWith {
+  font-size: 14px;
+  font-weight: semi-bold;
+  color: 000000; /* Or any desired color */
+  text-align: right;
+  margin-top: 20px; /* Adjust margin as needed */
+  background-color: #d0f4de;
+  border-radius: 8px;
+  font-family: 'Nunito Sans', sans-serif;
+  padding: 12px; /* Add some padding for better visuals */
+}
