@@ -25,7 +25,7 @@ export const generateResponse = async (
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: \`Bearer \${geminiApiKey}\`,
+          "Authorization": `Bearer ${geminiApiKey}`
         },
         body: JSON.stringify({
           contents: [
