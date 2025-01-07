@@ -28,15 +28,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ content, isBot }) => {
   return (
     <div
       className={cn(
-        "flex w-full mb-4 animate-fade-in",
+        "flex w-full animate-fade-in",
         isBot ? "justify-start" : "justify-end"
       )}
     >
       <div
         className={cn(
-          "max-w-[80%] rounded-lg p-4 relative group",
+          "max-w-[80%] rounded-2xl p-4 relative group shadow-sm",
           isBot
-            ? "bg-primary/10 text-primary hover:bg-primary/20"
+            ? "bg-white/80 backdrop-blur-sm text-gray-800 hover:bg-white/90"
             : "bg-primary text-primary-foreground"
         )}
       >
@@ -44,7 +44,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ content, isBot }) => {
         {isBot && (
           <button
             onClick={handleCopy}
-            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-primary/20"
+            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-lg hover:bg-primary/10"
             aria-label="Copy message"
           >
             <Copy className="w-4 h-4" />

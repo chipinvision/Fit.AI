@@ -26,9 +26,13 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Type your message..."
         disabled={disabled}
-        className="flex-1"
+        className="flex-1 bg-white/50 backdrop-blur-sm border-primary/20 focus-visible:ring-primary rounded-xl"
       />
-      <Button type="submit" disabled={disabled || !message.trim()}>
+      <Button 
+        type="submit" 
+        disabled={disabled || !message.trim()}
+        className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
+      >
         <Send className="h-4 w-4" />
       </Button>
     </form>
