@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -597,27 +598,62 @@ const SidebarMenuAction = React.forwardRef<
     showOnHover?: boolean
   }
 >(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button"
+  const [open, setOpen] = React.useState(false)
 
   return (
-    <Comp
-      ref={ref}
-      data-sidebar="menu-action"
-      className={cn(
-        "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
-        // Increases the hit area of the button on mobile.
-        "after:absolute after:-inset-2 after:md:hidden",
-        "peer-data-[size=sm]/menu-button:top-1",
-        "peer-data-[size=default]/menu-button:top-1.5",
-        "peer-data-[size=lg]/menu-button:top-2.5",
-        "group-data-[collapsible=icon]:hidden",
-        showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
-        className
-      )}
-      {...props}
-    />
-  )
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <button
+          ref={ref}
+          data-sidebar="menu-action"
+          className={cn(
+            "absolute right-1 top-1.5 flex aspect-square w-5 items-center justify-center rounded-md p-0 text-sidebar-foreground outline-none ring-sidebar-ring transition-transform hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 peer-hover/menu-button:text-sidebar-accent-foreground [&>svg]:size-4 [&>svg]:shrink-0",
+            // Increases the hit area of the button on mobile.
+            "after:absolute after:-inset-2 after:md:hidden",
+            "peer-data-[size=sm]/menu-button:top-1",
+            "peer-data-[size=default]/menu-button:top-1.5",
+            "peer-data-[size=lg]/menu-button:top-2.5",
+            "group-data-[collapsible=icon]:hidden",
+            showOnHover &&
+              "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+            className
+          )}
+          {...props}
+        />
+      </DialogTrigger>
+      <DialogContent className="bg-popover">
+        <ul className="py-1.5">
+          <li>
+            <a
+              href="#"
+              onClick={() => setOpen(false)}
+              className="text-sm leading-6 text-foreground block px-3 py-1.5 hover:bg-accent hover:text-accent-foreground"
+            >
+              Profile
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              onClick={() => setOpen(false)}
+              className="text-sm leading-6 text-foreground block px-3 py-1.5 hover:bg-accent hover:text-accent-foreground"
+            >
+              Settings
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              onClick={() => setOpen(false)}
+              className="text-sm leading-6 text-foreground block px-3 py-1.5 hover:bg-accent hover:text-accent-foreground"
+            >
+              Logout
+            </a>
+          </li>
+        </ul>
+      </DialogContent>
+    </Dialog>
+  );
 })
 SidebarMenuAction.displayName = "SidebarMenuAction"
 

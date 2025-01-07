@@ -9,66 +9,32 @@ interface Message {
   isBot: boolean;
 }
 
-const Index = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+export const Index = () => {
+  const [showDonateModal, setShowDonateModal] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([
+    { content: "Hey I'm Fit.AI, I'm your virtual trainer always up to help.", isBot: true },
+  ]); 
+
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const [apiKey, setApiKey] = useState<string | null>(localStorage.getItem('GEMINI_API_KEY'));
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  useEffect(() => {
-    scrollToBottom();
+  useEffect(() => { 
+    scrollToBottom(); 
   }, [messages]);
 
-  useEffect(() => {
-    const sendInitialMessage = async () => {
-      if (!apiKey) {
-        toast({
-          title: "API Key Required",
-          description: "Please enter your Gemini API key to start chatting.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setIsLoading(true);
-      try {
-        const response = await generateResponse([], apiKey);
-        setMessages([{ content: response, isBot: true }]);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to start the conversation. Please check your API key.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    sendInitialMessage();
-  }, [apiKey]);
 
   const handleSendMessage = async (content: string) => {
-    if (!apiKey) {
-      toast({
-        title: "API Key Required",
-        description: "Please enter your Gemini API key to start chatting.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     const newMessage = { content, isBot: false };
     setMessages((prev) => [...prev, newMessage]);
     setIsLoading(true);
 
     try {
-      const response = await generateResponse([...messages, newMessage], apiKey);
+      const response = await generateResponse([...messages, newMessage]);
       setMessages((prev) => [...prev, { content: response, isBot: true }]);
     } catch (error) {
       toast({
@@ -81,61 +47,20 @@ const Index = () => {
     }
   };
 
-  const handleApiKeySubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const newApiKey = formData.get('apiKey') as string;
-    if (newApiKey) {
-      localStorage.setItem('GEMINI_API_KEY', newApiKey);
-      setApiKey(newApiKey);
-      toast({
-        title: "Success",
-        description: "API key has been saved.",
-      });
-    }
-  };
-
-  if (!apiKey) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary/5 to-primary-foreground/5">
-        <div className="w-full max-w-md space-y-8 p-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-primary">Fit.AI</h2>
-            <p className="mt-2 text-gray-600">Your Personal AI Fitness Coach</p>
-          </div>
-          <form onSubmit={handleApiKeySubmit} className="mt-8 space-y-6">
-            <div className="rounded-md">
-              <input
-                type="password"
-                name="apiKey"
-                required
-                className="relative block w-full rounded-xl border-0 py-3 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="Enter your Gemini API key"
-              />
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="group relative flex w-full justify-center rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all duration-200"
-              >
-                Start Your Fitness Journey
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  return (
+  return ( 
     <div className="flex flex-col h-screen bg-gradient-to-br from-primary/5 to-primary-foreground/5">
       <header className="bg-white/80 backdrop-blur-sm border-b border-primary/10 p-4 shadow-sm">
-        <h1 className="text-3xl font-bold text-primary text-center">
-          Fit.AI
-        </h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-primary">Fit.AI</h1>
+          <a href="https://buymeacoffee.com/invisionchip" target="_blank" rel="noopener noreferrer">
+            <button className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-focus">
+              Donate
+            </button>
+          </a>
+        </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4">
+      <main className="flex-1 overflow-y-auto p-4 bg-white/10 backdrop-blur-sm animate-fade-in">
         <div className="max-w-3xl mx-auto space-y-4">
           {messages.map((message, index) => (
             <ChatMessage
@@ -153,8 +78,28 @@ const Index = () => {
           <ChatInput onSend={handleSendMessage} disabled={isLoading} />
         </div>
       </footer>
+
+      {showDonateModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 animate-fade-in">
+          <div className="bg-white p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <p className="text-lg mb-4">Liked the app? Support the engineers behind this app, by donating a small amount.</p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  setShowDonateModal(false);
+                  localStorage.setItem('donationModalDismissed', 'true');
+                }}
+                className="px-4 py-2 bg-gray-200 rounded-md mr-4 hover:bg-gray-300"
+              >
+                Dismiss
+              </button>
+              <a href="https://buymeacoffee.com/invisionchip" target="_blank" rel="noopener noreferrer" className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-focus">Donate</a>
+            </div>
+          </div>
+          <div className="fixed inset-0 bg-black opacity-50" onClick={() => setShowDonateModal(false)} />
+        </div>
+      )}
     </div>
   );
 };
 
-export default Index;

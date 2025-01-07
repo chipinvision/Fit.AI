@@ -29,11 +29,19 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
         className="flex-1 bg-white/50 backdrop-blur-sm border-primary/20 focus-visible:ring-primary rounded-xl"
       />
       <Button 
-        type="submit" 
-        disabled={disabled || !message.trim()}
-        className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
-      >
-        <Send className="h-4 w-4" />
+        type="submit"
+        disabled={disabled || !message.trim()} 
+        className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200"
+      > 
+        {disabled ? (
+          <span className="flex items-center justify-center">
+            <span className="animate-pulse bg-white rounded-full w-2 h-2 mr-1"></span>
+            <span className="animate-pulse bg-white rounded-full w-2 h-2 mr-1"></span>
+            <span className="animate-pulse bg-white rounded-full w-2 h-2"></span>
+          </span>
+        ) : (
+          <Send className="h-4 w-4" />
+        )}
       </Button>
     </form>
   );
