@@ -20,12 +20,11 @@ export const generateResponse = async (
 ): Promise<string> => {
   try {
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + geminiApiKey,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${geminiApiKey}`
         },
         body: JSON.stringify({
           contents: [
