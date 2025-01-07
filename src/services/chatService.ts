@@ -49,7 +49,8 @@ export const generateResponse = async (
     );
 
     if (!response.ok) {
-      throw new Error("Failed to generate response");
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || "Failed to generate response");
     }
 
     const data = await response.json();
