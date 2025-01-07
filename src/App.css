@@ -1,8 +1,26 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Make the app container fill the viewport height */
+}
+
+/* Header styles */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10; /* Ensure header is on top */
+  background-color: #fff; /* Example background color */
+  padding: 1rem;
+}
+
+/* Chat container styles */
+.chat-container {
+  flex: 1; /* Allow chat to fill remaining space */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 2rem; /* Add padding around the chat content */
+  margin-top: 5rem; /* Adjust for header height */
+  margin-bottom: 5rem; /* Adjust for input height */
 }
 
 .logo {
@@ -39,4 +57,14 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* Input styles */
+.chat-input-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10; /* Ensure input is on top */
+  background-color: #fff; /* Example background color */
+  padding: 1rem;
 }

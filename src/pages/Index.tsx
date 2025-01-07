@@ -3,7 +3,6 @@ import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import { generateResponse } from "@/services/chatService";
 import { useToast } from "@/hooks/use-toast";
-import MadeWith from "@/components/MadeWith";
 
 interface Message {
   content: string;
@@ -78,11 +77,10 @@ export const Index = () => {
         <div className="max-w-3xl mx-auto">
           <ChatInput onSend={handleSendMessage} disabled={isLoading} />
         </div>
-        <div className="absolute bottom-4 right-4">
-          <MadeWith
-            developerName="Suresh Mishra"
-            developerWebsite="https://invisionchipux.framer.ai/"
-          />
+        <div className="text-centered mt-4 text-sm text-gray-500 flex justify-center items-center">
+          <p>Engineered by <b><a href="https://invisionchipux.framer.ai/" target="_blank" rel="noopener noreferrer">
+      Suresh Mishra
+    </a></b></p>
         </div>
       </footer>
 
