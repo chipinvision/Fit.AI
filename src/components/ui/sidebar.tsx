@@ -9,7 +9,7 @@ import { Button } from "./button"
 import { Input } from "./input"
 import { Separator } from "./separator"
 import { Sheet, SheetContent } from "./sheet"
-import { Dialog, DialogContent, DialogTrigger } from "./dialog"
+import { Dialog, DialogContent, DialogTrigger } from "@radix-ui/react-dialog"
 import { Skeleton } from "./skeleton"
 import {
   Tooltip,
