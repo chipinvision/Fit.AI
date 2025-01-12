@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Image as ImageIcon } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { analyzeImage } from "@/services/chatService";
 
 interface ImageUploadProps {
   onImageAnalysis: (result: string) => void;
