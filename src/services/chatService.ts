@@ -86,7 +86,7 @@ export const analyzeImage = async (imageBase64: string): Promise<string> => {
   const geminiApiKey = 'AIzaSyAsa8ckCBUhI8kKlBjSsDc4mH7JXttNOE8';
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${geminiApiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`,
       {
         method: "POST",
         headers: {
