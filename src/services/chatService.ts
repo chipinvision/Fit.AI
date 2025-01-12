@@ -16,8 +16,9 @@ Guidelines:
 - Keep the conversation flowing naturally
 - Never prefix your responses with your name
 - Maintain a conversational, friendly tone
-- Do not use asterisks (*) for formatting, even if it's a bold text or heading. Use hyphens (-) for creating lists
 - Do not use any markdown formatting
+- Use hyphens (-) for lists
+- Format sections with numbers and periods (1. Section Title)
 
 Key Areas to Cover (naturally through conversation):
 - Understanding user's current fitness level and experience
@@ -97,7 +98,7 @@ export const analyzeImage = async (imageBase64: string): Promise<string> => {
             {
               parts: [
                 {
-                  text: "Analyze this person's body structure and provide specific fitness recommendations. Include: 1) Current body type assessment 2) Suggested workout focus areas 3) Exercise recommendations 4) Diet suggestions. Keep the response concise and actionable.",
+                  text: "Analyze this person's body structure and provide specific fitness recommendations. Format the response in these sections using numbers and periods (no asterisks): 1. Current Body Type Assessment 2. Suggested Workout Focus Areas 3. Exercise Recommendations 4. Diet Suggestions. Keep the response concise and actionable.",
                 },
                 {
                   inline_data: {
