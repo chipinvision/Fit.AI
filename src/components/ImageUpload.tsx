@@ -16,6 +16,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageAnalysis, onUploadStar
 
   const handleImageUpload = async (file: File) => {
     onUploadStart(); 
+    toast({
+      title: "Uploading Image",
+      description: "Please wait while your image is being processed...",
+    });
+
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Error",
@@ -36,9 +41,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageAnalysis, onUploadStar
 
     try {
       const base64 = await convertToBase64(file);
+
+      toast({
+        title: "Analyzing Image",
+        description: "Analyzing your image...",
+      });
       const analysis = await analyzeImage(base64);
       onImageAnalysis(analysis, base64); // Pass base64 to onImageAnalysis
       onUploadComplete(); 
+      toast({
+        title: "Image Uploaded",
+        description: "Your image has been uploaded successfully!",
+      });
 
       onCloseModal(); // Close the modal after successful upload
     } catch (error) {
