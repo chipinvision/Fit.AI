@@ -98,7 +98,7 @@ export const analyzeImage = async (imageBase64: string): Promise<string> => {
             {
               parts: [
                 {
-                  text: "Analyze this person's body structure and provide specific fitness recommendations. Format the response in these sections using numbers and periods (no asterisks): 1. Current Body Type Assessment 2. Suggested Workout Focus Areas 3. Exercise Recommendations 4. Diet Suggestions. Keep the response concise and actionable.",
+                  text: "Analyze this person's body structure and provide specific fitness recommendations. Format the response in these sections using numbers and periods (no asterisks or markdown): 1. Current Body Type Assessment 2. Suggested Workout Focus Areas 3. Exercise Recommendations (use hyphens for lists) 4. Diet Suggestions (use hyphens for lists). Keep the response concise and actionable.",
                 },
                 {
                   inline_data: {
@@ -125,7 +125,11 @@ export const analyzeImage = async (imageBase64: string): Promise<string> => {
     }
 
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    let responseText = data.candidates[0].content.parts[0].text;
+    responseText = responseText.replace(/\*/g, '');
+    responseText = responseText.replace(/#{1,6}\s/g, '');
+    responseText = responseText.replace(/\*\*(.*?)\*\*/g, '$1');
+    return responseText;
   } catch (error) {
     console.error("Error analyzing image:", error);
     throw error;
