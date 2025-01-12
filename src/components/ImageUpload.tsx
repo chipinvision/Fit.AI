@@ -6,13 +6,16 @@ import { analyzeImage } from "@/services/chatService";
 interface ImageUploadProps {
   onImageAnalysis: (result: string) => void;
   onUploadStart: () => void;
+  onUploadComplete: () => void;
+  onCloseModal: () => void; // Add onCloseModal prop
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ onImageAnalysis, onUploadStart }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ onImageAnalysis, onUploadStart, onUploadComplete, onCloseModal }) => {
   const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
 
   const handleImageUpload = async (file: File) => {
+    onUploadStart(); 
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Error",
@@ -32,10 +35,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageAnalysis, onUploadStar
     }
 
     try {
-      onUploadStart();
       const base64 = await convertToBase64(file);
       const analysis = await analyzeImage(base64);
       onImageAnalysis(analysis);
+      onUploadComplete(); 
+      onCloseModal(); // Close the modal after successful upload
     } catch (error) {
       toast({
         title: "Error",

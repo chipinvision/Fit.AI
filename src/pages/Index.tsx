@@ -6,10 +6,17 @@ import { useToast } from "@/hooks/use-toast";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 
 interface Message {
   content: string;
   isBot: boolean;
+}
+
+interface BeforeInstallPromptEvent extends Event {
+  platforms: string[];
+  userChoice: Promise<{ outcome: string; platform: string }>;
+  prompt(): void;
 }
 
 export const Index = () => {
@@ -17,16 +24,33 @@ export const Index = () => {
     { content: "Hey I'm Fit.AI, I'm your virtual trainer always up to help. You can chat with me or upload your photo for a personalized fitness analysis!", isBot: true },
   ]); 
   const [isLoading, setIsLoading] = useState(false);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [showImageUpload, setShowImageUpload] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const beforeInstallPromptHandler = (e: BeforeInstallPromptEvent) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallPrompt(false);
+    };    
+    window.addEventListener('beforeinstallprompt', beforeInstallPromptHandler);
+    window.addEventListener('appinstalled', () => setShowInstallPrompt(false));
+    return () => window.removeEventListener('beforeinstallprompt', beforeInstallPromptHandler);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => { 
-    scrollToBottom(); 
+    scrollToBottom();
+    // Show install prompt after the first response if deferredPrompt is available and not already shown
+    if (messages.length > 1 && deferredPrompt && !showInstallPrompt) {
+      setShowInstallPrompt(true);
+    }
   }, [messages]);
 
   const handleSendMessage = async (content: string) => {
@@ -43,7 +67,7 @@ export const Index = () => {
         description: "Failed to generate response. Please try again.",
         variant: "destructive",
       });
-    } finally {
+    } finally {      
       setIsLoading(false);
     }
   };
@@ -74,6 +98,33 @@ export const Index = () => {
         </div>
       </main>
 
+      {/* Install Prompt Modal */}
+      <Sheet open={showInstallPrompt} onOpenChange={setShowInstallPrompt}>
+        <SheetContent side="bottom" className="p-4">
+          <SheetHeader>
+            <SheetTitle>Install Fit.AI</SheetTitle>
+          </SheetHeader>
+          <div className="text-center mt-4">
+            <p>
+              Install Fit.AI for a better experience and offline access.
+            </p>            
+            {deferredPrompt && (
+              <Button
+                onClick={() => {
+                  // Trigger PWA installation
+                  deferredPrompt.prompt();
+                  setShowInstallPrompt(false);
+                  setDeferredPrompt(null);
+                }}
+                className="mt-4"
+              >
+                Install
+              </Button>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+
       <Sheet open={showImageUpload} onOpenChange={setShowImageUpload}>
         <SheetContent side="bottom" className="h-[400px]">
           <SheetHeader>
@@ -82,6 +133,8 @@ export const Index = () => {
           <div className="mt-4">
             <ImageUpload 
               onImageAnalysis={handleImageAnalysis}
+              onUploadComplete={() => setIsLoading(false)}
+              onCloseModal={() => setShowImageUpload(false)}
               onUploadStart={() => setIsLoading(true)}
             />
           </div>

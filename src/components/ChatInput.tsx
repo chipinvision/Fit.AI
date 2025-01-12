@@ -6,10 +6,10 @@ import { Send, Upload } from "lucide-react";
 interface ChatInputProps {
   onSend: (message: string) => void;
   onImageUploadClick?: () => void;
-  disabled?: boolean;
+  isLoading?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, onImageUploadClick, disabled }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, onImageUploadClick, isLoading }) => {
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,24 +25,24 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, onImageUploadClick, disab
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message..."
-        disabled={disabled}
+        placeholder="Ask a question..." 
+        disabled={isLoading}
         className="flex-1 bg-white/50 backdrop-blur-sm border-primary/20 focus-visible:ring-primary rounded-xl"
       />
       <Button 
         type="button"
         onClick={onImageUploadClick}
-        disabled={disabled}
+        disabled={isLoading}
         className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200"
       >
         <Upload className="h-4 w-4" />
       </Button>
       <Button 
         type="submit"
-        disabled={disabled || !message.trim()} 
+        disabled={isLoading || !message.trim()} 
         className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200"
       > 
-        {disabled ? (
+        {isLoading ? (
           <span className="flex items-center justify-center">
             <span className="animate-pulse bg-white rounded-full w-2 h-2 mr-1"></span>
             <span className="animate-pulse bg-white rounded-full w-2 h-2 mr-1"></span>
