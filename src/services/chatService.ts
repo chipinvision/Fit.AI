@@ -81,3 +81,52 @@ export const generateResponse = async (messages: Message[]): Promise<string> => 
     throw error;
   }
 };
+
+export const analyzeImage = async (imageBase64: string): Promise<string> => {
+  const geminiApiKey = 'AIzaSyAsa8ckCBUhI8kKlBjSsDc4mH7JXttNOE8';
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent?key=${geminiApiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: "Analyze this person's body structure and provide specific fitness recommendations. Include: 1) Current body type assessment 2) Suggested workout focus areas 3) Exercise recommendations 4) Diet suggestions. Keep the response concise and actionable.",
+                },
+                {
+                  inline_data: {
+                    mime_type: "image/jpeg",
+                    data: imageBase64.split(',')[1]
+                  }
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 32,
+            topP: 1,
+            maxOutputTokens: 1024,
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || "Failed to analyze image");
+    }
+
+    const data = await response.json();
+    return data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    console.error("Error analyzing image:", error);
+    throw error;
+  }
+};

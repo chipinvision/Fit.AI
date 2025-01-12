@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
+import ImageUpload from "@/components/ImageUpload";
 import { generateResponse } from "@/services/chatService";
 import { useToast } from "@/hooks/use-toast";
 
@@ -12,9 +13,8 @@ interface Message {
 export const Index = () => {
   const [showDonateModal, setShowDonateModal] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { content: "Hey I'm Fit.AI, I'm your virtual trainer always up to help.", isBot: true },
+    { content: "Hey I'm Fit.AI, I'm your virtual trainer always up to help. You can chat with me or upload your photo for a personalized fitness analysis!", isBot: true },
   ]); 
-
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -38,7 +38,7 @@ export const Index = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to generate response. Please check your API key.",
+        description: "Failed to generate response. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -46,9 +46,16 @@ export const Index = () => {
     }
   };
 
+  const handleImageAnalysis = (analysis: string) => {
+    setMessages((prev) => [
+      ...prev,
+      { content: "I've analyzed your photo. Here's my assessment:", isBot: true },
+      { content: analysis, isBot: true }
+    ]);
+  };
+
   return ( 
     <div className="flex flex-col h-screen">
-      {/* Fixed Header */}
       <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-b border-primary/10 p-4 shadow-sm z-50">
         <div className="flex items-center justify-between max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-[#6a8d73]">Fit.AI</h1>
@@ -60,9 +67,12 @@ export const Index = () => {
         </div>
       </header>
 
-      {/* Scrollable Chat Area */}
       <main className="flex-1 overflow-y-auto pt-20 pb-32 px-4 bg-gradient-to-br from-[#f4fdd9]/5 to-[#6a8d73]/5">
         <div className="max-w-3xl mx-auto space-y-4">
+          <ImageUpload 
+            onImageAnalysis={handleImageAnalysis}
+            onUploadStart={() => setIsLoading(true)}
+          />
           {messages.map((message, index) => (
             <ChatMessage
               key={index}
@@ -74,7 +84,6 @@ export const Index = () => {
         </div>
       </main>
 
-      {/* Fixed Footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-primary/10 p-4 z-50">
         <div className="max-w-3xl mx-auto">
           <ChatInput onSend={handleSendMessage} disabled={isLoading} />
