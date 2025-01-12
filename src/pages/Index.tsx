@@ -16,6 +16,7 @@ export const Index = () => {
     { content: "Hey I'm Fit.AI, I'm your virtual trainer always up to help. You can chat with me or upload your photo for a personalized fitness analysis!", isBot: true },
   ]); 
   const [isLoading, setIsLoading] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -47,6 +48,7 @@ export const Index = () => {
   };
 
   const handleImageAnalysis = (analysis: string) => {
+    setShowImageUpload(false);
     setMessages((prev) => [
       ...prev,
       { content: "I've analyzed your photo. Here's my assessment:", isBot: true },
@@ -69,10 +71,12 @@ export const Index = () => {
 
       <main className="flex-1 overflow-y-auto pt-20 pb-32 px-4 bg-gradient-to-br from-[#f4fdd9]/5 to-[#6a8d73]/5">
         <div className="max-w-3xl mx-auto space-y-4">
-          <ImageUpload 
-            onImageAnalysis={handleImageAnalysis}
-            onUploadStart={() => setIsLoading(true)}
-          />
+          {showImageUpload && (
+            <ImageUpload 
+              onImageAnalysis={handleImageAnalysis}
+              onUploadStart={() => setIsLoading(true)}
+            />
+          )}
           {messages.map((message, index) => (
             <ChatMessage
               key={index}
@@ -86,7 +90,11 @@ export const Index = () => {
 
       <footer className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-primary/10 p-4 z-50">
         <div className="max-w-3xl mx-auto">
-          <ChatInput onSend={handleSendMessage} disabled={isLoading} />
+          <ChatInput 
+            onSend={handleSendMessage} 
+            disabled={isLoading}
+            onImageUploadClick={() => setShowImageUpload(true)} 
+          />
           <div className="text-center mt-2 text-sm text-gray-500">
             <p>Engineered by <b>
               <a href="https://invisionchipux.framer.ai/" 

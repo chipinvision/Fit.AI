@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
+import { Send, Upload } from "lucide-react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  onImageUploadClick?: () => void;
   disabled?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ onSend, onImageUploadClick, disabled }) => {
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -28,6 +29,14 @@ const ChatInput: React.FC<ChatInputProps> = ({ onSend, disabled }) => {
         disabled={disabled}
         className="flex-1 bg-white/50 backdrop-blur-sm border-primary/20 focus-visible:ring-primary rounded-xl"
       />
+      <Button 
+        type="button"
+        onClick={onImageUploadClick}
+        disabled={disabled}
+        className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200"
+      >
+        <Upload className="h-4 w-4" />
+      </Button>
       <Button 
         type="submit"
         disabled={disabled || !message.trim()} 
