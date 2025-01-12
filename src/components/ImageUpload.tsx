@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { analyzeImage } from "@/services/chatService";
 
 interface ImageUploadProps {
-  onImageAnalysis: (result: string) => void;
+  onImageAnalysis: (result: string, base64: string) => void;
   onUploadStart: () => void;
   onUploadComplete: () => void;
   onCloseModal: () => void; // Add onCloseModal prop
@@ -37,8 +37,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageAnalysis, onUploadStar
     try {
       const base64 = await convertToBase64(file);
       const analysis = await analyzeImage(base64);
-      onImageAnalysis(analysis);
+      onImageAnalysis(analysis, base64); // Pass base64 to onImageAnalysis
       onUploadComplete(); 
+
       onCloseModal(); // Close the modal after successful upload
     } catch (error) {
       toast({
