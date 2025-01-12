@@ -4,6 +4,7 @@ import ChatInput from "@/components/ChatInput";
 import ImageUpload from "@/components/ImageUpload";
 import { generateResponse } from "@/services/chatService";
 import { useToast } from "@/hooks/use-toast";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 interface Message {
   content: string;
@@ -71,12 +72,6 @@ export const Index = () => {
 
       <main className="flex-1 overflow-y-auto pt-20 pb-32 px-4 bg-gradient-to-br from-[#f4fdd9]/5 to-[#6a8d73]/5">
         <div className="max-w-3xl mx-auto space-y-4">
-          {showImageUpload && (
-            <ImageUpload 
-              onImageAnalysis={handleImageAnalysis}
-              onUploadStart={() => setIsLoading(true)}
-            />
-          )}
           {messages.map((message, index) => (
             <ChatMessage
               key={index}
@@ -87,6 +82,20 @@ export const Index = () => {
           <div ref={messagesEndRef} />
         </div>
       </main>
+
+      <Sheet open={showImageUpload} onOpenChange={setShowImageUpload}>
+        <SheetContent side="bottom" className="h-[400px]">
+          <SheetHeader>
+            <SheetTitle>Upload Your Photo</SheetTitle>
+          </SheetHeader>
+          <div className="mt-4">
+            <ImageUpload 
+              onImageAnalysis={handleImageAnalysis}
+              onUploadStart={() => setIsLoading(true)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
 
       <footer className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-primary/10 p-4 z-50">
         <div className="max-w-3xl mx-auto">
